@@ -8,6 +8,9 @@ TagManager:
   - BlendPlane1
   - Ball
   - Driver
+  - Cactus
+  - Bubble
+  - Ceil
   layers:
   - Default
   - TransparentFX
