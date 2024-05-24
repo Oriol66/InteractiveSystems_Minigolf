@@ -2,20 +2,17 @@ using UnityEngine;
 
 public class Kick : MonoBehaviour
 {
-    public float hitForce = 10f; // Fuerza que se aplicará a la pelota
-
+    public float hitForce = 10f; 
+    public float secondsVector = 0.5f;
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Colisión detectada con: " + collision.gameObject.name);
-
+    
         if (collision.gameObject.CompareTag("Driver"))
         {
-            Debug.Log("Colisión con el Driver detectada");
 
             Rigidbody pelotaRigidbody = GetComponent<Rigidbody>();
             if (pelotaRigidbody == null)
             {
-                Debug.LogError("Rigidbody en la pelota es null");
                 return;
             }
 
@@ -26,17 +23,16 @@ public class Kick : MonoBehaviour
                 return;
             }
 
-            // Obtener la posición del Driver hace 0.5 segundos
-            Vector3 previousDriverPosition = driverScript.GetPreviousPosition(0.5f);
+            // Obtain last position 
+            Vector3 previousDriverPosition = driverScript.GetPreviousPosition(secondsVector);
 
-            // Calcular la dirección del golpe
+            // Kick direction
             Vector3 hitDirection = collision.contacts[0].point - previousDriverPosition;
             hitDirection = hitDirection.normalized;
-            Debug.Log("Dirección del golpe: " + hitDirection);
+            //Debug.Log("Kick direction: " + hitDirection);
 
-            // Aplicar la fuerza a la pelota
+            // Apply force
             pelotaRigidbody.AddForce(hitDirection * hitForce, ForceMode.Impulse);
-            Debug.Log("Fuerza aplicada a la pelota: " + hitDirection * hitForce);
         }
     }
 }
