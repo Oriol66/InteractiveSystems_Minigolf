@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player2AntiCollider : MonoBehaviour
+public class PlayerCollisionHandler : MonoBehaviour
 {
     // Referencia al techo invisible
     public GameObject Ceil;
