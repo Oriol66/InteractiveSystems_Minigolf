@@ -14,10 +14,10 @@ public class RemoveCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Algo ha colisionado con el collider");
+        
         if (other.CompareTag("Ball") && !isBubbleTouched) // Verifica si el objeto que colisionó es la pelota
         {
-            Debug.Log("Pelota ha impactado con el collider");
+            
             isBubbleTouched = true;
             StartCoroutine(SpawnBubbles());
         }
