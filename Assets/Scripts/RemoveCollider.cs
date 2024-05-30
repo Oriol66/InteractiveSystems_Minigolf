@@ -9,14 +9,16 @@ public class RemoveCollider : MonoBehaviour
     public GameObject boxCollider; // El collider que desaparecerá al tocar los objetos
     public float time = 10f; // Tiempo límite para tocar las burbujas
     private List<GameObject> spawnedBubbles = new List<GameObject>(); // Lista de burbujas instanciadas
-    private bool isObjectTouched = false; // Indica si las burbujas han sido tocadas
+    private bool isBubbleTouched = false;// Indica si las burbujas han sido tocadas
+    private int bubblesTouchedCount = 0;
 
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Algo ha colisionado con el collider");
-        if (other.CompareTag("Ball")) // Verifica si el objeto que colisionó es la pelota
+        if (other.CompareTag("Ball") && !isBubbleTouched) // Verifica si el objeto que colisionó es la pelota
         {
             Debug.Log("Pelota ha impactado con el collider");
+            isBubbleTouched = true;
             StartCoroutine(SpawnBubbles());
         }
     }
@@ -64,7 +66,7 @@ public class RemoveCollider : MonoBehaviour
     private void DisappearBubbles()
     {
         Debug.Log("Desapareciendo burbujas");
-        if (!isObjectTouched)
+        if (bubblesTouchedCount < bubbleSpawnPoints.Count)
         {
             foreach (GameObject bubble in spawnedBubbles)
             {
@@ -81,18 +83,20 @@ public class RemoveCollider : MonoBehaviour
         }
 
         spawnedBubbles.Clear(); // Limpia la lista de objetos instanciados
+        bubblesTouchedCount = 0; // Resetea el contador de burbujas tocadas
+        isBubbleTouched = false; // Permite nuevas colisiones
     }
+
 
     public void BubbleTouched(GameObject touchedBubble)
     {
-        isObjectTouched = true;
         Destroy(touchedBubble);
         spawnedBubbles.Remove(touchedBubble);
+        bubblesTouchedCount++;
 
-        if (spawnedBubbles.Count == 0)
+        if (bubblesTouchedCount == bubbleSpawnPoints.Count)
         {
             boxCollider.SetActive(false);
-            StopCoroutine(SpawnBubbles());
         }
     }
 }
