@@ -4,13 +4,20 @@ using System.Collections.Generic;
 public class Driver : MonoBehaviour
 {
     private Queue<Vector3> previousPositions = new Queue<Vector3>();
-    private float positionRecordInterval = 0.01f; // Intervalo de grabación de posiciones
-    private float timeToStore = 0.5f; // Tiempo a almacenar en segundos
+    private float positionRecordInterval = 0.01f; // positions interval
+    private float timeToStore = 0.5f; // time of vector
 
     public float fixedYPosition = 8f; // Fixed position
+    public Transform ballTransform;
+    public Transform pivotPoint; 
+
+
+    public 
     void Start()
     {
         InvokeRepeating("RecordPosition", 0f, positionRecordInterval);
+        //GameObject ball = GameObject.FindGameObjectWithTag("Ball");
+        //ballTransform = ball.transform;
     }
 
     void Update()
@@ -19,6 +26,23 @@ public class Driver : MonoBehaviour
         Vector3 newPosition = transform.position;
         newPosition.y = fixedYPosition;
         transform.position = newPosition;  
+        
+        if (ballTransform != null){
+
+            Vector3 direccion = ballTransform.position - transform.position;
+            direccion.y = 0f;
+            if (direccion != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direccion);
+                pivotPoint.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
+                       }
+            /*
+            Vector3 targetPosition = ballTransform.position;
+            Vector3 direction = new Vector3(targetPosition.x - transform.position.x, 0, targetPosition.z - transform.position.z);
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Euler(0,targetRotation.eulerAngles.y, 0);
+            *///transform.LookAt(ballTransform);
+        }
     }
 
     void RecordPosition()
