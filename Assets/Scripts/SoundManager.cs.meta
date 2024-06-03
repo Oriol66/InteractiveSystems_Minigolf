@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5150f41de1c6abb488ad5804c54aae40
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bubblePopClip: {fileID: 8300000, guid: b04a86d7940dd4b4b9e34163b057ab23, type: 3}
+  - collisionSound: {fileID: 8300000, guid: 015034231ebf1264daac51678a93d4bc, type: 3}
+  - popOutCollider: {fileID: 8300000, guid: cca4912c091a8fc4e9a04f54acdb36c0, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

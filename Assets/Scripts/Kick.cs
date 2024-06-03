@@ -33,6 +33,13 @@ public class Kick : MonoBehaviour
 
             // Apply force
             pelotaRigidbody.AddForce(hitDirection * hitForce, ForceMode.Impulse);
+
+            GameManager.Instance.IncrementCollisionCount();
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayCollisionSound();
+            }
         }
     }
 }

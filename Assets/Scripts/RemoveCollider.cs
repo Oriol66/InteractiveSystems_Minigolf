@@ -79,7 +79,11 @@ public class RemoveCollider : MonoBehaviour
         }
         else
         {
-            boxCollider.SetActive(false); // Si los objetos fueron tocados, desactiva el collider de la caja
+            boxCollider.SetActive(false);
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayPopOutCollider();
+            }
         }
 
         spawnedBubbles.Clear(); // Limpia la lista de objetos instanciados
@@ -97,6 +101,10 @@ public class RemoveCollider : MonoBehaviour
         if (bubblesTouchedCount == bubbleSpawnPoints.Count)
         {
             boxCollider.SetActive(false);
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayPopOutCollider();
+            }
         }
     }
 }
