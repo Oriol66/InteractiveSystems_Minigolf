@@ -19,20 +19,28 @@ public class Kick : MonoBehaviour
             Driver driverScript = collision.gameObject.GetComponent<Driver>();
             if (driverScript == null)
             {
-                Debug.LogError("DriverScript en el Driver es null");
+                Debug.LogError("DriverScript in Driver is null");
                 return;
             }
 
-            // Obtain last position 
+            //Obtain last position 
             Vector3 previousDriverPosition = driverScript.GetPreviousPosition(secondsVector);
 
-            // Kick direction
+            //Compute the kick direction
             Vector3 hitDirection = collision.contacts[0].point - previousDriverPosition;
             hitDirection = hitDirection.normalized;
-            //Debug.Log("Kick direction: " + hitDirection);
 
-            // Apply force
+            //Apply force
             pelotaRigidbody.AddForce(hitDirection * hitForce, ForceMode.Impulse);
+
+            //Increase the colision counter
+            GameManager.Instance.IncrementCollisionCount();
+
+            //Reproduce a sound each time the ball is kicked
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayCollisionSound();
+            }
         }
     }
 }
