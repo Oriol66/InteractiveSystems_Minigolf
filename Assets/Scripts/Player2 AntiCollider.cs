@@ -2,25 +2,23 @@ using UnityEngine;
 
 public class Player2AntiCollider : MonoBehaviour
 {
-    // Referencia al techo invisible
     public GameObject Ceil;
-    public float fixedYPosition = 8f; // Fixed position
+    public float fixedYPosition = 8f; 
 
-    // Método llamado cuando el jugador colisiona con otros objetos
     private void OnCollisionEnter(Collision collision)
     {
-        // Verifica si la colisión es con el techo invisible
+        //Check if the collision is with the invisible ceiling
         if (collision.gameObject == Ceil)
         
         {
-            // Ignora la colisión con el techo invisible
+            //Ignore collision with the invisible ceiling
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
         }
     }
 
     void Update()
     {
-        // set y position constant
+        //set y position as a constant
         Vector3 newPosition = transform.position;
         newPosition.y = fixedYPosition;
         transform.position = newPosition;

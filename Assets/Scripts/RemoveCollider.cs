@@ -4,52 +4,53 @@ using UnityEngine;
 
 public class RemoveCollider : MonoBehaviour
 {
-    public GameObject bubblePrefab; // El prefab de la burbuja que aparecerá al impactar con la caja
-    public List<Transform> bubbleSpawnPoints = new List<Transform>(); // Los puntos de spawn donde aparecerán las burbujas
-    public GameObject boxCollider; // El collider que desaparecerá al tocar los objetos
-    public float time = 10f; // Tiempo límite para tocar las burbujas
-    private List<GameObject> spawnedBubbles = new List<GameObject>(); // Lista de burbujas instanciadas
-    private bool isObjectTouched = false; // Indica si las burbujas han sido tocadas
+    public GameObject bubblePrefab; 
+    public List<Transform> bubbleSpawnPoints = new List<Transform>(); 
+    public GameObject boxCollider; 
+    public float time = 10f;
+
+    private List<GameObject> spawnedBubbles = new List<GameObject>(); 
+    private bool isBubbleTouched = false;
+    private int bubblesTouchedCount = 0;
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Algo ha colisionado con el collider");
-        if (other.CompareTag("Ball")) // Verifica si el objeto que colisionó es la pelota
+        
+        if (other.CompareTag("Ball") && !isBubbleTouched)
         {
-            Debug.Log("Pelota ha impactado con el collider");
+            //Generating the bubbles to be touched
+            isBubbleTouched = true;
             StartCoroutine(SpawnBubbles());
         }
     }
 
     private IEnumerator SpawnBubbles()
     {
-        Debug.Log("Generando burbujas");
+        Debug.Log("Generating Bubbles");
 
-        // Verificar si bubblePrefab está asignado
         if (bubblePrefab == null)
         {
-            Debug.LogError("bubblePrefab no está asignado en el Inspector");
+            Debug.LogError("bubblePrefab is not assigned");
             yield break;
         }
 
-        // Iterar sobre los puntos de spawn
+        //Iterate over the spawn points
         foreach (Transform spawnPoint in bubbleSpawnPoints)
         {
-            // Verificar si el punto de spawn es nulo
             if (spawnPoint == null)
             {
-                Debug.LogError("Un punto de spawn en bubbleSpawnPoints no está asignado");
+                Debug.LogError("A spawn point is not assigned");
                 continue;
             }
 
+            //Instantiate a bubble at the current spawn point and add it to the list
             GameObject bubble = Instantiate(bubblePrefab, spawnPoint.position, spawnPoint.rotation);
             spawnedBubbles.Add(bubble);
 
-            // Verificar si la burbuja instanciada tiene el componente Bubble
             Bubble bubbleComponent = bubble.GetComponent<Bubble>();
             if (bubbleComponent == null)
             {
-                Debug.LogError("El prefab de la burbuja no tiene el componente 'Bubble'");
+                Debug.LogError("prefab doesn't contain the component bubble");
                 continue;
             }
 
@@ -63,8 +64,8 @@ public class RemoveCollider : MonoBehaviour
 
     private void DisappearBubbles()
     {
-        Debug.Log("Desapareciendo burbujas");
-        if (!isObjectTouched)
+        Debug.Log("Desappearing bubbles");
+        if (bubblesTouchedCount < bubbleSpawnPoints.Count)
         {
             foreach (GameObject bubble in spawnedBubbles)
             {
@@ -73,26 +74,43 @@ public class RemoveCollider : MonoBehaviour
                     Destroy(bubble);
                 }
             }
-            boxCollider.SetActive(true); // El collider de la caja permanece activo si no se tocaron los objetos
+
+            //The box collider remains active if the objects were not touched
+            boxCollider.SetActive(true);
         }
         else
         {
-            boxCollider.SetActive(false); // Si los objetos fueron tocados, desactiva el collider de la caja
+            boxCollider.SetActive(false);
+
+            //Reproduce a sound when the collider is removed
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayPopOutCollider();
+            }
         }
 
-        spawnedBubbles.Clear(); // Limpia la lista de objetos instanciados
+        spawnedBubbles.Clear();
+        bubblesTouchedCount = 0; 
+        isBubbleTouched = false; 
     }
+
 
     public void BubbleTouched(GameObject touchedBubble)
     {
-        isObjectTouched = true;
         Destroy(touchedBubble);
         spawnedBubbles.Remove(touchedBubble);
+        bubblesTouchedCount++;
 
-        if (spawnedBubbles.Count == 0)
+        //Check if all the bubbles have been touched
+        if (bubblesTouchedCount == bubbleSpawnPoints.Count)
         {
             boxCollider.SetActive(false);
-            StopCoroutine(SpawnBubbles());
+
+            //Reproduce a sound when the collider is removed
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayPopOutCollider();
+            }
         }
     }
 }
