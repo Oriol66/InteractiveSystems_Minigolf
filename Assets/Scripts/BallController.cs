@@ -11,11 +11,12 @@ public class BallController : MonoBehaviour
     void Update()
     {
         float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float vertical = Input.GetAxis("Vertical"); 
 
-
+        //Movement through axes X and Z
         Vector3 movimiento = new Vector3(-horizontal, 0f, -vertical); //
 
-        rb.AddForce(movimiento * velocity); //Apply a force to the rigidbody
+        //Apply a force to the rigidbody
+        rb.AddForce(movimiento * velocity); 
     }
 }

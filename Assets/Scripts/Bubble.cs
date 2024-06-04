@@ -14,12 +14,14 @@ public class Bubble : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Algo ha tocado la burbuja");
+        Debug.Log("Something has touched the ball");
+        //Check if the collider that touched the ball has the tag Player
         if (other.CompareTag("Player") && spawner != null)
         {
-            Debug.Log("Burbujas tocadas por player");
+            Debug.Log("Bubbles touched by the player");
             spawner.BubbleTouched(gameObject);
 
+            //Sound when the ball is touched and errased
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.PlayBubblePopSound();

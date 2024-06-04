@@ -9,7 +9,6 @@ public class Hole : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ball"))
         {
-            
             Debug.Log("¡The ball has gone into the hole!");
             EndGame();
         }

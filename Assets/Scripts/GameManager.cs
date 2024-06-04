@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         gameOverText.gameObject.SetActive(false);
-        //cameraAudioSource = Camera.main.GetComponent<AudioSource>();
+
+        //Reproduce background music from the start
         SoundManager.Instance.PlayBackgroundMusic();
     }
 
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isGameOver)
         {
+            //Increments the time elapsed and updates the canvas clock
             elapsedTime += Time.deltaTime;
             UpdateTimerText();
         }
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isGameOver)
         {
+            //Increments the number of collisions and updates the canvas count
             collisionCount++;
             UpdateCollisionCountText();
         }
@@ -62,8 +65,10 @@ public class GameManager : MonoBehaviour
     public void YouWin()
     {
         isGameOver = true;
-        gameOverText.text = "CONGRATULATIONS! YOU COMPLETE\nTHE LEVEL"; // Configurar el texto del fin de juego
+        gameOverText.text = "CONGRATULATIONS! YOU COMPLETE\nTHE LEVEL";
         gameOverText.gameObject.SetActive(true);
+
+        //Stop playing background music and play final music
         SoundManager.Instance.StopBackgroundMusic();
         SoundManager.Instance.PlayYouWinMusic();
     }

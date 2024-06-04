@@ -4,44 +4,38 @@ using System.Collections.Generic;
 public class Driver : MonoBehaviour
 {
     private Queue<Vector3> previousPositions = new Queue<Vector3>();
-    private float positionRecordInterval = 0.01f; // positions interval
-    private float timeToStore = 0.5f; // time of vector
+    private float positionRecordInterval = 0.01f; 
+    private float timeToStore = 0.5f; 
 
-    public float fixedYPosition = 8f; // Fixed position
+    public float fixedYPosition = 8f;
     public Transform ballTransform;
     public Transform pivotPoint; 
 
 
-    public 
     void Start()
     {
+        //Implements the RecordPosition method for each interval of time
         InvokeRepeating("RecordPosition", 0f, positionRecordInterval);
-        //GameObject ball = GameObject.FindGameObjectWithTag("Ball");
-        //ballTransform = ball.transform;
+
     }
 
     void Update()
     {
-        // set y position constant
+        // set y position as a constant
         Vector3 newPosition = transform.position;
         newPosition.y = fixedYPosition;
         transform.position = newPosition;  
         
         if (ballTransform != null){
 
+            //Calculate the direction from the object to the ball
             Vector3 direccion = ballTransform.position - transform.position;
             direccion.y = 0f;
             if (direccion != Vector3.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(direccion);
                 pivotPoint.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
-                       }
-            /*
-            Vector3 targetPosition = ballTransform.position;
-            Vector3 direction = new Vector3(targetPosition.x - transform.position.x, 0, targetPosition.z - transform.position.z);
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Euler(0,targetRotation.eulerAngles.y, 0);
-            *///transform.LookAt(ballTransform);
+            }
         }
     }
 
@@ -49,9 +43,12 @@ public class Driver : MonoBehaviour
     {
         if (previousPositions.Count >= timeToStore / positionRecordInterval)
         {
-            previousPositions.Dequeue(); // Eliminar la posición más antigua
+            //Remove the oldest position
+            previousPositions.Dequeue(); 
         }
-        previousPositions.Enqueue(transform.position); // Almacenar la posición actual
+
+        //Store the actual position
+        previousPositions.Enqueue(transform.position); 
     }
 
     public Vector3 GetPreviousPosition(float timeAgo)
@@ -63,8 +60,8 @@ public class Driver : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No hay suficiente historial de posiciones, devolviendo la posición actual");
-            return transform.position; // Si no hay suficiente historia, devuelve la posición actual
+            //If there isn't enough position history, return the current position
+            return transform.position; 
         }
     }
 }
